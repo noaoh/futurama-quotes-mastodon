@@ -1,0 +1,11 @@
+{
+  "name": "futurama-quotes-mastodon",
+  "version": "1.0.0",
+  "description": "A serverless function that uploads a futurama quote to botsin.space everyday",
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "aws-sdk": "^2.1290.0",
+    "node-fetch": "^2.6.7"
+  }
+}
