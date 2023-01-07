@@ -1,9 +1,17 @@
 const db = require('./dynamodb');
+const mastodon = require('./mastodon');
+const ses = require('./ses');
 
 module.exports.run = async (event, context) => {
-  const time = new Date();
-  console.log(`Your cron function "${context.functionName}" ran at ${time}`);
-
   const quotes = await db.getQuotes();
-  console.log(quotes);
+  const l = quotes.length;
+  if (l === 0) {
+    await ses.sendOutOfQuotesAlert();
+  } else {
+    const idx = Math.floor(Math.random() * l);
+    const choice = quotes[idx];
+    const { id, quote } = choice;
+    await mastodon.createPost(quote);
+    await db.updateQuote(id);
+  }
 };

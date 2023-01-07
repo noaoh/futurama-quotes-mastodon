@@ -7,16 +7,19 @@ const getQuotes = async () => {
     // Create the DynamoDB client
     const dynamodb = new aws.DynamoDB.DocumentClient();
 
-    // Set the attribute to filter on
-    const filterKey = 'is_used';
-    const filterValue = false;
+    // Set the attributes to filter on
+    const isUsedKey = 'is_used';
+    const isUsedValue = false;
+    const lengthKey = 'quoteLength';
+    const lengthValue = 500;
 
     // Set up the filter expression
-    const filterExpression = `${filterKey} = :v1`;
+    const filterExpression = `${isUsedKey} = :v1 AND ${lengthKey} <= :v2`;
 
     // Set up the expression attribute values
     const expressionAttributeValues = {
-        ':v1': filterValue
+        ':v1': isUsedValue,
+        ':v2': lengthValue
     };
 
     // Set up the params for the scan operation
@@ -40,7 +43,7 @@ const getQuotes = async () => {
     }
 };
 
-const updateQuote = async (id) => {
+const updateQuote = async (quoteId) => {
     // Set the region
     aws.config.update({ region: 'us-east-1' });
 
@@ -55,17 +58,12 @@ const updateQuote = async (id) => {
     // Set up the update expression
     const updateExpression = 'SET is_used = :v1';
 
-    // Set up the key of the item to update
-    const key = {
-        id: {
-            N: id.toString()
-        }
-    };
-
     // Set up the params for the update operation
     const params = {
         TableName: 'futurama_quotes',
-        Key: key,
+        Key: {
+            'id': quoteId
+        },
         UpdateExpression: updateExpression,
         ExpressionAttributeValues: attributeValues,
         ReturnValues: 'UPDATED_NEW'

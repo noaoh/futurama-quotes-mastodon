@@ -8,6 +8,9 @@ frameworkVersion: '3'
 provider:
   name: aws
   runtime: nodejs14.x
+  environment:
+    MASTODON_ACCESS_TOKEN: ${param:mastodon-access-token}
+    MY_EMAIL_ADDRESS: ${param:my-email-address}
 
   iam:
     role:
@@ -41,6 +44,8 @@ resources: # CloudFormation template syntax from here on.
             AttributeType: S
           - AttributeName: is_used
             AttributeType: B
+          - AttributeName: quoteLength
+            AttributeType: N
           - AttributeName: id
             AttributeType: N
         KeySchema:
