@@ -38,3 +38,4 @@ async function sendOutOfQuotesAlert() {
 }
 
 module.exports.sendOutOfQuotesAlert = sendOutOfQuotesAlert;
+
