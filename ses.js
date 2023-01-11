@@ -18,7 +18,7 @@ async function sendOutOfQuotesAlert() {
             Body: {
                 Text: {
                     Charset: 'UTF-8',
-                    Data: 'You have run out of futurama quotes.  Please reset the state of the futurama_quotes table'
+                    Data: 'You have run out of futurama quotes.'
                 }
             },
             Subject: {

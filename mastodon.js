@@ -1,13 +1,13 @@
 const fetch = require('node-fetch');
 
-const createPost = async (quote) => {
+const createPost = async (quote, key) => {
     // Set the API endpoint URL
     const apiUrl = 'https://botsin.space/api/v1/statuses';
 
     // Set the parameters for the new post
     const params = {
         status: quote,
-        visibility: 'public'
+        visibility: 'private'
     };
 
     const accessToken = process.env.MASTODON_ACCESS_TOKEN;
@@ -18,7 +18,9 @@ const createPost = async (quote) => {
         body: JSON.stringify(params),
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${accessToken}`
+            'Authorization': `Bearer ${accessToken}`,
+            // avoid posting multiple statuses by passing in an idempotency key
+            'Idempotency-Key': key
         }
     });
 

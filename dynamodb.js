@@ -43,43 +43,31 @@ const getQuotes = async () => {
     }
 };
 
-const updateQuote = async (quoteId) => {
+const updateQuote = (quoteId, functionId) => {
     // Set the region
     aws.config.update({ region: 'us-east-1' });
 
     // Create the DynamoDB client
     const dynamodb = new aws.DynamoDB.DocumentClient();
 
-    // Set the attribute values to update
-    const attributeValues = {
-        ':v1': true
-    };
-
-    // Set up the update expression
-    const updateExpression = 'SET is_used = :v1';
-
-    // Set up the params for the update operation
-    const params = {
-        TableName: 'futurama_quotes',
-        Key: {
-            'id': quoteId
-        },
-        UpdateExpression: updateExpression,
-        ExpressionAttributeValues: attributeValues,
-        ReturnValues: 'UPDATED_NEW'
-    };
-
-    try {
-        // Update the item
-        const data = await dynamodb.update(params).promise();
-
-        // Get the updated item
-        const item = data.Attributes;
-
-        return item;
-    } catch (error) {
-        console.error(error);
+    const query = {
+        Update: {
+            TableName: 'futurama_quotes',
+            Key: {
+                id: quoteId,
+            },
+            UpdateExpression: 'set is_used = :val',
+            ExpressionAttributeValues: { ':val': true },
+            ReturnValues: 'ALL_NEW'
+        }
     }
+
+    dynamodb.transactWrite({ 
+        TransactItems: [ query ],
+        ClientRequestToken: functionId
+    }, (err, ignore) => {
+        console.error(err);
+    });
 };
 
 module.exports.getQuotes = getQuotes;
