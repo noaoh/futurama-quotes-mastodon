@@ -7,7 +7,7 @@ const createPost = async (quote, key) => {
     // Set the parameters for the new post
     const params = {
         status: quote,
-        visibility: 'private'
+        visibility: 'public'
     };
 
     const accessToken = process.env.MASTODON_ACCESS_TOKEN;
